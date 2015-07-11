@@ -7,7 +7,11 @@ class Telegram
 	callbackHandler: (error, response, body, callback) =>
 		console.log body
 		if body
-			result = JSON.parse body
+			result = try 
+				JSON.parse body
+			catch err
+				null
+
 			if result.ok
 				callback null, result
 			else

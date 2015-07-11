@@ -8,6 +8,7 @@
 	"dependencies": {
 		"restify": "*",
 		"request": ">=2.45.0",
+		"reflekt": ">=0.3.0",
 		"memcached": ">=2.1.0" 
 	},
 	"bin": {

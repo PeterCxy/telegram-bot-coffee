@@ -1,4 +1,5 @@
 request = require 'request'
+reflekt = require 'reflekt'
 
 telegram = require './telegram'
 parser = require './parser'
@@ -29,7 +30,14 @@ handleMessage = (msg) ->
 	handled = no
 	for r in routes
 		if isCommand cmd, r.command
-			if r.numArgs == options.length - 1 or r.numArgs < 0
+			if r.numArgs == options.length - 1 and r.numArgs > 0
+				result = reflekt.parse r.handler
+				args = { "#{result[0]}": msg }
+				for option, i in options[1...]
+					args[result[i + 1]] = option
+				console.log args
+				reflekt.call r.handler, args
+			else if r.numArgs < 0
 				r.handler msg, options[1...]
 			else
 				console.log 'Wrong usage of ' + cmd
