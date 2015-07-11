@@ -4,9 +4,11 @@ cluster = require 'cluster'
 config = (require './parser').parseConfig()
 exports.config = config
 
+# These modules need config, so load them here
 telegram = require './telegram'
 serv = require './server'
 store = require './store'
+help = require './help'
 
 exports.launch = ->
 
@@ -30,6 +32,8 @@ exports.launch = ->
 
 	server.post "/" + config.key, serv.handleRequest
 
+	# -1: unlimited arguments
+	serv.route 'help', -1, help.handle
 	for mod in config.modules
 		module = require mod
 		module.setup telegram, serv, store if module
