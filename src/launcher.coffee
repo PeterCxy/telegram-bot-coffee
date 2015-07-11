@@ -32,11 +32,14 @@ exports.launch = ->
 
 	server.post "/" + config.key, serv.handleRequest
 
-	# -1: unlimited arguments
-	serv.route 'help', -1, help.handle
+	# Route the help command
+	serv.route help.info
+	help.add help.info
 	for mod in config.modules
 		module = require mod
-		module.setup telegram, serv, store if module
+		info = module.setup telegram, store
+		serv.route info
+		help.add info
 
 	if cluster.isMaster
 		telegram.setWebhook config.urlbase + "/" + config.key, (error) =>

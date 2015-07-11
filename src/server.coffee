@@ -6,12 +6,13 @@ parser = require './parser'
 
 routes = []
 
-exports.route = (cmd, args, handler) ->
-	r =
-		command: cmd,
-		numArgs: args,
-		handler: handler
-	routes.push r
+exports.route = (info) ->
+	for i in info
+		r =
+			command: i.cmd
+			numArgs: i.num
+			handler: i.act
+		routes.push r
 
 isCommand = (arg, cmd) ->
 	if (arg.indexOf '@') > 0
