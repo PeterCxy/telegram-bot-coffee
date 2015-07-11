@@ -11,7 +11,7 @@ store = require './store'
 exports.launch = ->
 
 	if cluster.isMaster
-		cluster.fork() for i in [1...8]
+		cluster.fork() for i in [1...config.workers]
 
 	server = restify.createServer
 		name: 'telegram-bot'
