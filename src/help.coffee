@@ -6,14 +6,15 @@ help = []
 exports.info = [
 		cmd: 'help'
 		args: '[command]'
-		num: -1
+		num: 1
+		opt: 1
 		desc: 'Get help for [command]. If no arguments passed, print the full help string'
-		act: (msg, args) =>
+		act: (msg, cmd) =>
 			opt = ''
-			if args.length == 0
+			if !cmd?
 				(opt += "/#{h.cmd} #{h.args}\n#{h.des}\n\n" if !h.debug) for h in help
 			else
-				(opt = "/#{h.cmd} #{h.args}\n#{h.des}" if h.cmd == args[0]) for h in help
+				(opt = "/#{h.cmd} #{h.args}\n#{h.des}" if h.cmd == cmd) for h in help
 				opt = "Helpless" if opt == ''
 			telegram.sendMessage msg.chat.id, opt
 ]
