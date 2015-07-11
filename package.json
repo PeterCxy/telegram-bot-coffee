@@ -3,6 +3,8 @@
 	"version": "1.0.0",
 	"author": "PeterCxy",
 	"description": "A modular Telegram bot written in CoffeeScript",
+	"license": "GPL-3.0",
+	"homepage": "https://github.com/PeterCxy/telegram-bot-coffee",
 	"dependencies": {
 		"restify": "*",
 		"request": ">=2.45.0",
