@@ -46,12 +46,35 @@ class Telegram
 			text: text
 		@post 'sendMessage', opts, (error, result) =>
 			console.log "Message sent to #{chat}" if result.ok
-	
-	sendPhoto: (chat, stream) =>
+
+uploadStub = (method, name) ->
+	(chat, stream, reply_to) ->
+		# TODO: Should support file_id
 		opts =
 			chat_id: chat
-			photo: stream
-		@postUpload 'sendPhoto', opts, (error, result) =>
-			@sendMessage chat, ':P' if !result.ok
+			"#{name}": stream
+		opts.reply_to_message_id = reply_to if reply_to
+		@postUpload method, opts, (error, result) =>
+			console.log "#{method} succeeded" if result.ok
+
+uploadMethods = [
+		method: "sendPhoto"
+		name: "photo"
+	,
+		method: "sendAudio"
+		name: "audio"
+	,
+		method: "sendVideo"
+		name: "video"
+	,
+		method: "sendDocument"
+		name: "document"
+	,
+		method: "sendSticker"
+		name: "sticker"
+]
+
+for m in uploadMethods
+	Telegram.prototype[m.method] = uploadStub m.method, m.name
 
 module.exports = new Telegram config.key
