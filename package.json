@@ -1,0 +1,14 @@
+{
+	"name": "telegram-bot-coffee",
+	"version": "1.0.0",
+	"author": "PeterCxy",
+	"description": "A modular Telegram bot written in CoffeeScript",
+	"dependencies": {
+		"restify": "*",
+		"request": ">=2.45.0",
+		"memcached": ">=2.1.0" 
+	},
+	"bin": {
+		"telegram-bot": "./bin/telegram-bot"
+	}
+}
