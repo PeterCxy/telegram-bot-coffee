@@ -27,6 +27,21 @@ exports.info = [
 			opt = ''
 			(opt += "#{h.cmd} - #{h.args} #{h.des}\n" if !h.debug) for h in help
 			telegram.sendMessage msg.chat.id, opt
+	,
+		cmd: 'module'
+		num: 1
+		opt: 1
+		desc: 'Get module info. If no arguments passed, print loaded modules'
+		act: (msg, module) =>
+			opt = ''
+			if !module?
+				opt += 'Loaded modules:\n\n'
+				opt += "#{(require m).name}\n" for m in config.modules
+				opt += '\nSend /module [name] to get description of a module'
+			else
+				(opt = "#{(require m).desc}" if (require m).name == module) for m in config.modules
+				opt = 'Not found' if opt == ''
+			telegram.sendMessage msg.chat.id, opt
 ]
 
 exports.add = (info) ->
