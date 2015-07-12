@@ -18,6 +18,15 @@ exports.info = [
 				(opt = "/#{h.cmd} #{h.args}\n#{h.des}" if h.cmd == cmd) for h in help
 				opt = "Helpless" if opt == ''
 			telegram.sendMessage msg.chat.id, opt
+	,
+		cmd: 'father'
+		num: 0
+		desc: 'Generate command string for @botfather. Send this string to @botfather via /setcommands'
+		debug: yes
+		act: (msg) =>
+			opt = ''
+			(opt += "#{h.cmd} - #{h.args} #{h.des}\n" if !h.debug) for h in help
+			telegram.sendMessage msg.chat.id, opt
 ]
 
 exports.add = (info) ->
