@@ -31,7 +31,7 @@ handleMessage = (msg) ->
 	handled = no
 	for r in routes
 		if isCommand cmd, r.command
-			if r.numArgs > 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
+			if r.numArgs >= 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
 				result = reflekt.parse r.handler
 				args = { "#{result[0]}": msg }
 				for option, i in options[1...]
