@@ -1,3 +1,5 @@
+reflekt = require 'reflekt'
+
 {config} = require './launcher'
 telegram = require './telegram'
 
@@ -5,10 +7,9 @@ help = []
 
 exports.info = [
 		cmd: 'help'
-		args: '[command]'
 		num: 1
 		opt: 1
-		desc: 'Get help for [command]. If no arguments passed, print the full help string'
+		desc: 'Get help for a command. If no arguments passed, print the full help string'
 		act: (msg, cmd) =>
 			opt = ''
 			if !cmd?
@@ -23,8 +24,18 @@ exports.add = (info) ->
 	for i in info
 		h =
 			cmd: i.cmd
-			args: i.args
+			args: if i.args then i.args else parseArgs i
 			des: i.desc
 			debug: i.debug
 		help.push h
 
+parseArgs = (info) ->
+	str = ''
+	args = reflekt.parse info.act
+	if args.length > 1
+		for arg, i in args[1...]
+			str += if i < info.num - info.opt
+				"<#{arg}> "
+			else
+				"[#{arg}] "
+	str.trim()
