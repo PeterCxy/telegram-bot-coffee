@@ -33,8 +33,9 @@ parseArgs = (info) ->
 	str = ''
 	args = reflekt.parse info.act
 	if args.length > 1
+		opt = if info.opt then info.opt else 0
 		for arg, i in args[1...]
-			str += if i < info.num - info.opt
+			str += if i < info.num - opt
 				"<#{arg}> "
 			else
 				"[#{arg}] "
