@@ -115,7 +115,7 @@ The first argument of `act` function is the `Message` object, the same one as is
 
 The description may not be explicit enough, see example module projects:
 
-[telegram-bot-examples](https://github.com/PeterCxy/telegram-bot-examples)
+[telegram-bot-examples](https://github.com/PeterCxy/telegram-bot-examples)  
 [telegram-bot-pictures](https://github.com/PeterCxy/telegram-bot-pictures)
 
 License
