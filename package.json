@@ -11,6 +11,12 @@
 		"reflekt": ">=0.3.0",
 		"memcached": ">=2.1.0" 
 	},
+	"devDependencies": {
+		"coffee-script": ">=1.9.0"
+	},
+	"scripts": {
+		"prepublish": "cake build"
+	},
 	"bin": {
 		"telegram-bot": "./bin/telegram-bot"
 	}
