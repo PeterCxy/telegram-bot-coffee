@@ -121,7 +121,7 @@ The description may not be explicit enough, see example module projects:
 License
 ===
 
-Copyright (C) 2014 Peter Cai
+Copyright (C) 2015 Peter Cai
 
 telegram-bot-coffee is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
