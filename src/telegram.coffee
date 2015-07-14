@@ -7,7 +7,7 @@ class Telegram
 	callbackHandler: (error, response, body, callback) =>
 		console.log body
 		if body
-			result = try 
+			result = try
 				JSON.parse body
 			catch err
 				null
@@ -44,10 +44,11 @@ class Telegram
 		@post 'setWebHook', opts, (error, result) =>
 			callback error
 	
-	sendMessage: (chat, text) ->
+	sendMessage: (chat, text, reply_to) ->
 		opts =
 			chat_id: chat
 			text: text
+		opts['reply_to_message_id'] = reply_to if reply_to
 		@post 'sendMessage', opts, (error, result) =>
 			console.log "Message sent to #{chat}" if result.ok
 
@@ -57,7 +58,7 @@ uploadStub = (method, name) ->
 		opts =
 			chat_id: chat
 			"#{name}": stream
-		opts.reply_to_message_id = reply_to if reply_to
+		opts['reply_to_message_id'] = reply_to if reply_to
 		@postUpload method, opts, (error, result) =>
 			console.log "#{method} succeeded" if result.ok
 
