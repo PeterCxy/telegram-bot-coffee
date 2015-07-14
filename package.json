@@ -5,6 +5,11 @@
 	"description": "A modular Telegram bot written in CoffeeScript",
 	"license": "GPL-3.0",
 	"homepage": "https://github.com/PeterCxy/telegram-bot-coffee",
+	"keywords": [
+		"telegram",
+		"bot",
+		"telegram-bot"
+	],
 	"dependencies": {
 		"restify": "*",
 		"request": ">=2.45.0",
@@ -13,6 +18,10 @@
 	},
 	"devDependencies": {
 		"coffee-script": ">=1.9.0"
+	},
+	"respository": {
+		"type": "git",
+		"url": "https://github.com/PeterCxy/telegram-bot-coffee.git"
 	},
 	"scripts": {
 		"prepublish": "cake build"
