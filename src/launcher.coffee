@@ -1,5 +1,6 @@
 restify = require 'restify'
 cluster = require 'cluster'
+reflekt = require 'reflekt'
 
 config = (require './parser').parseConfig()
 exports.config = config
@@ -37,7 +38,16 @@ exports.launch = ->
 	help.add help.info
 	for mod in config.modules
 		module = require mod
-		info = module.setup telegram, store
+
+		# Parse setup arguments
+		args = reflekt.parse module.setup
+
+		info = switch args.length
+			when 1 then module.setup telegram
+			when 2 then module.setup telegram, store
+			when 3 then module.setup telegram, store, serv
+			else console.log 'Unknown arguments. Abandoning.'
+
 		serv.route info
 		help.add info
 

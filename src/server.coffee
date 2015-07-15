@@ -2,6 +2,7 @@ request = require 'request'
 reflekt = require 'reflekt'
 
 telegram = require './telegram'
+store = require './store'
 parser = require './parser'
 {config}= require './launcher'
 
@@ -15,6 +16,17 @@ exports.route = (info) ->
 			optArgs: if i.opt then i.opt else 0
 			handler: i.act
 		routes.push r
+
+# grabInput: if set, all inputs except commands will be send to [module] (exports.input)
+# cmd is the command that triggered input grabbing, will be passed to the handler
+exports.grabInput = (module, cmd) ->
+	store.put 'grab', 'module', module, (err) =>
+		store.put 'grab', 'cmd', cmd, (err) =>
+			console.log "Input successfully grabbed to #{module}.#{cmd}"
+
+exports.releaseInput = (module) ->
+	store.put 'grab', 'module', '', (err) ->
+		store.put 'grab', 'cmd', ''
 
 isCommand = (arg, cmd) ->
 	if (arg.indexOf '@') > 0
@@ -45,8 +57,22 @@ handleMessage = (msg) ->
 				telegram.sendMessage msg.chat.id, "Wrong usage. Consult the /help command for help."
 			handled = yes
 			break
+
+	# If the current input has not been handled
+	# Try to distribute it to the input grabber
 	if !handled
-		console.log 'Nothing done for ' + cmd
+		store.get 'grab', 'module', (err, m) =>
+			if m? and m != ''
+				console.log "Input is grabbed by #{m}"
+				store.get 'grab', 'cmd', (err, cmd) =>
+					console.log "Input is grabbed to #{cmd}"
+					# In the module that grabs input
+					# Should contain a function
+					# exports.setup = (cmd, msg, telegram, store, server) -> ...
+					# cmd is the trigger command of the whole event
+					(require m).input cmd, msg, telegram, store, exports if cmd? and cmd != ''
+			else
+				console.log 'Nothing done for ' + cmd
 
 exports.handleRequest = (req, res, next) ->
 	console.log req.params if req.params
