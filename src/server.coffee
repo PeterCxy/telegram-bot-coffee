@@ -19,14 +19,15 @@ exports.route = (info) ->
 
 # grabInput: if set, all inputs except commands will be send to [module] (exports.input)
 # cmd is the command that triggered input grabbing, will be passed to the handler
-exports.grabInput = (chat, module, cmd) ->
-	store.put 'grab', "#{chat}module", module, (err) =>
-		store.put 'grab', "#{chat}cmd", cmd, (err) =>
+exports.grabInput = (chat, from, module, cmd) ->
+	# Tag fields with chat and from id
+	store.put 'grab', "#{chat}module#{from}", module, (err) =>
+		store.put 'grab', "#{chat}cmd#{from}", cmd, (err) =>
 			console.log "Input successfully grabbed to #{module}.#{cmd}"
 
-exports.releaseInput = (chat, module) ->
-	store.put 'grab', "#{chat}module", '', (err) ->
-		store.put 'grab', "#{chat}cmd", ''
+exports.releaseInput = (chat, from) ->
+	store.put 'grab', "#{chat}module#{from}", '', (err) ->
+		store.put 'grab', "#{chat}cmd#{from}", ''
 
 isCommand = (arg, cmd) ->
 	if (arg.indexOf '@') > 0
@@ -61,10 +62,10 @@ handleMessage = (msg) ->
 	# If the current input has not been handled
 	# Try to distribute it to the input grabber
 	if !handled
-		store.get 'grab', "#{msg.chat.id}module", (err, m) =>
+		store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", (err, m) =>
 			if m? and m != ''
 				console.log "Input is grabbed by #{m}"
-				store.get 'grab', "#{msg.chat.id}cmd", (err, cmd) =>
+				store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", (err, cmd) =>
 					console.log "Input is grabbed to #{cmd}"
 					# In the module that grabs input
 					# Should contain a function
