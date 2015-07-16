@@ -69,9 +69,9 @@ handleMessage = (msg) ->
 					console.log "Input is grabbed to #{cmd}"
 					# In the module that grabs input
 					# Should contain a function
-					# exports.setup = (cmd, msg, telegram, store, server) -> ...
+					# exports.setup = (cmd, msg, telegram, store, server, config) -> ...
 					# cmd is the trigger command of the whole event
-					(require m).input cmd, msg, telegram, store, exports if cmd? and cmd != ''
+					(require m).input cmd, msg, telegram, store, exports, config if cmd? and cmd != ''
 			else
 				console.log 'Nothing done for ' + cmd
 
