@@ -13,7 +13,10 @@ exports.info = [
 		act: (msg, cmd) =>
 			opt = ''
 			if !cmd?
-				(opt += "/#{h.cmd} #{h.args}\n#{h.des}\n\n" if !h.debug) for h in help
+				if msg.chat.title?
+					opt = 'Full help disabled in groups. Please send help command via private chat.'
+				else
+					(opt += "/#{h.cmd} #{h.args}\n#{h.des}\n\n" if !h.debug) for h in help
 			else
 				(opt = "/#{h.cmd} #{h.args}\n#{h.des}" if h.cmd == cmd) for h in help
 				opt = "Helpless" if opt == ''
