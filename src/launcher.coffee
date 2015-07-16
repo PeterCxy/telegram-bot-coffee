@@ -38,7 +38,7 @@ exports.launch = ->
 	for mod in config.modules
 		module = require mod
 
-		info = module.setup telegram, store, serv
+		info = module.setup telegram, store, serv, config
 
 		serv.route info
 		help.add info
