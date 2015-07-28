@@ -14,7 +14,8 @@
 		"restify": "*",
 		"request": ">=2.45.0",
 		"reflekt": ">=0.3.0",
-		"memcached": ">=2.1.0" 
+		"memcached": ">=2.1.0",
+		"korubaku": ">=1.0.0"
 	},
 	"devDependencies": {
 		"coffee-script": ">=1.9.0"

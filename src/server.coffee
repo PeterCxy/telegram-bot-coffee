@@ -1,5 +1,6 @@
 request = require 'request'
 reflekt = require 'reflekt'
+{korubaku} = require 'korubaku'
 
 telegram = require './telegram'
 store = require './store'
@@ -20,14 +21,16 @@ exports.route = (info) ->
 # grabInput: if set, all inputs except commands will be send to [module] (exports.input)
 # cmd is the command that triggered input grabbing, will be passed to the handler
 exports.grabInput = (chat, from, module, cmd) ->
-	# Tag fields with chat and from id
-	store.put 'grab', "#{chat}module#{from}", module, (err) =>
-		store.put 'grab', "#{chat}cmd#{from}", cmd, (err) =>
-			console.log "Input successfully grabbed to #{module}.#{cmd}"
+	korubaku (ko) =>
+		# Tag fields with chat and from id
+		yield store.put 'grab', "#{chat}module#{from}", module, ko.default()
+		yield store.put 'grab', "#{chat}cmd#{from}", cmd, ko.default()
+		console.log "Input successfully grabbed to #{module}.#{cmd}"
 
 exports.releaseInput = (chat, from) ->
-	store.put 'grab', "#{chat}module#{from}", '', (err) ->
-		store.put 'grab', "#{chat}cmd#{from}", ''
+	korubaku (ko) =>
+		yield store.put 'grab', "#{chat}module#{from}", '', ko.default()
+		yield store.put 'grab', "#{chat}cmd#{from}", '', ko.default()
 
 isCommand = (arg, cmd) ->
 	if (arg.indexOf '@') > 0
@@ -62,16 +65,17 @@ handleMessage = (msg) ->
 	# If the current input has not been handled
 	# Try to distribute it to the input grabber
 	if !handled
-		store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", (err, m) =>
+		korubaku (ko) =>
+			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
 			if m? and m != ''
 				console.log "Input is grabbed by #{m}"
-				store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", (err, cmd) =>
-					console.log "Input is grabbed to #{cmd}"
-					# In the module that grabs input
-					# Should contain a function
-					# exports.setup = (cmd, msg, telegram, store, server, config) -> ...
-					# cmd is the trigger command of the whole event
-					(require m).input cmd, msg, telegram, store, exports, config if cmd? and cmd != ''
+				cmd = yield store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", ko.default()
+				console.log "Input is grabbed to #{cmd}"
+				# In the module that grabs input
+				# Should contain a function
+				# exports.setup = (cmd, msg, telegram, store, server, config) -> ...
+				# cmd is the trigger command of the whole event
+				(require m).input cmd, msg, telegram, store, exports, config if cmd? and cmd != ''
 			else
 				console.log 'Nothing done for ' + cmd
 
