@@ -67,6 +67,11 @@ class Telegram
 		ret.push [a] for a in array
 		ret
 
+	makeHideKeyboard: (selective) ->
+		JSON.stringify
+			hide_keyboard: yes
+			selective: if selective? then selective else no
+
 uploadStub = (method, name) ->
 	(chat, stream, reply_to) ->
 		# TODO: Should support file_id
