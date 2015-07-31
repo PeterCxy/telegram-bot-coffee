@@ -42,6 +42,9 @@ exports.launch = ->
 
 		serv.route info
 		help.add info
+	# Routhe the cancel command
+	serv.route serv.info
+	help.add serv.info
 
 	if cluster.isMaster
 		telegram.setWebhook config.urlbase + "/" + config.key, (error) =>

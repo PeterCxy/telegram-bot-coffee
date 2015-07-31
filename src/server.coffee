@@ -9,7 +9,7 @@ parser = require './parser'
 
 routes = []
 
-exports.route = (info) ->
+exports.route = route = (info) ->
 	for i in info
 		r =
 			command: i.cmd
@@ -27,7 +27,7 @@ exports.grabInput = (chat, from, module, cmd) ->
 		yield store.put 'grab', "#{chat}cmd#{from}", cmd, ko.default()
 		console.log "Input successfully grabbed to #{module}.#{cmd}"
 
-exports.releaseInput = (chat, from) ->
+exports.releaseInput = releaseInput = (chat, from) ->
 	korubaku (ko) =>
 		yield store.put 'grab', "#{chat}module#{from}", '', ko.default()
 		yield store.put 'grab', "#{chat}cmd#{from}", '', ko.default()
@@ -86,3 +86,18 @@ exports.handleRequest = (req, res, next) ->
 	res.end()
 	next()
 
+# The cancel command
+exports.info = [
+		cmd: 'cancel'
+		num: 0
+		desc: 'Cancel the current session'
+		act: (msg) ->
+			releaseInput msg.chat.id, msg.from.id
+			for m in config.modules
+				mod = require m
+				
+				console.log "calling cancel of #{m} #{mod.cancel?}"
+				mod.cancel msg, telegram, store, exports, config if mod.cancel?
+			telegram.sendMessage msg.chat.id, 'Current session interrupted.', null,
+				telegram.makeHideKeyboard()
+]
