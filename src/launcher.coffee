@@ -25,7 +25,6 @@ exports.launch = ->
 
 	server.pre (req, res, next) =>
 		console.log "---- Incoming Request ----"
-		res.write "This is Peter's Telegram bot @PeterCxyBot"
 		res.writeHead 404
 		next()
 		res.end()
