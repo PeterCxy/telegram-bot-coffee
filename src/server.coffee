@@ -63,7 +63,7 @@ handleMessage = (msg) ->
 			break
 
 	# If the current input has not been handled
-	# Try to distribute it to the input grabber
+	# Try to distribute it to the input grabber or default processor
 	if !handled
 		korubaku (ko) =>
 			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
@@ -76,6 +76,13 @@ handleMessage = (msg) ->
 				# exports.setup = (cmd, msg, telegram, store, server, config) -> ...
 				# cmd is the trigger command of the whole event
 				(require m).input cmd, msg, telegram, store, exports, config if cmd? and cmd != ''
+			else if config.default? and
+					(msg.text.startsWith("@#{config.name}") or
+					!msg.chat.title? or
+					msg.reply_to_message.from.username is config.name)
+
+				console.log "Default processor: #{config.default}"
+				(require config.default).default msg, telegram, store, exports, config
 			else
 				console.log 'Nothing done for ' + cmd
 
