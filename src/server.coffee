@@ -47,6 +47,7 @@ handleMessage = (msg) ->
 	handled = no
 	for r in routes
 		if isCommand cmd, r.command
+			telegram.sendChatAction msg.chat.id, 'typing'
 			if r.numArgs >= 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
 				result = reflekt.parse r.handler
 				args = { "#{result[0]}": msg }
@@ -68,6 +69,7 @@ handleMessage = (msg) ->
 		korubaku (ko) =>
 			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
 			if m? and m != ''
+				telegram.sendChatAction msg.chat.id, 'typing'
 				console.log "Input is grabbed by #{m}"
 				cmd = yield store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", ko.default()
 				console.log "Input is grabbed to #{cmd}"
@@ -81,6 +83,7 @@ handleMessage = (msg) ->
 					!msg.chat.title? or
 					msg.reply_to_message.from.username is config.name)
 
+				telegram.sendChatAction msg.chat.id, 'typing'
 				console.log "Default processor: #{config.default}"
 				(require config.default).default msg, telegram, store, exports, config
 			else
@@ -90,6 +93,7 @@ exports.handleRequest = (req, res, next) ->
 	console.log req.params if req.params
 	handleMessage req.params.message if req.params.update_id
 	res.writeHead 200
+	console.log '---- Request end ----'
 	res.end()
 	next()
 
