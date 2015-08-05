@@ -44,12 +44,13 @@ class Telegram
 		@post 'setWebHook', opts, (error, result) =>
 			callback error
 	
-	sendChatAction: (chat, action) ->
+	sendChatAction: (chat, action, callback) ->
 		opts =
 			chat_id: chat
 			action: action
 		@post 'sendChatAction', opts, (error, result) =>
 			console.log 'chat action sent'
+			callback error, result
 	
 	sendMessage: (chat, text, reply_to, keyboard) ->
 		opts =

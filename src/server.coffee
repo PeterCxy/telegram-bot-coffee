@@ -40,36 +40,36 @@ isCommand = (arg, cmd) ->
 		arg == cmd
 
 handleMessage = (msg) ->
-	console.log "Handling message " + msg.message_id
-	options = parser.parse msg.text
-	cmd = if options[0].startsWith '/' then options[0][1...] else ''
-	console.log 'Command: ' + cmd
-	handled = no
-	for r in routes
-		if isCommand cmd, r.command
-			telegram.sendChatAction msg.chat.id, 'typing'
-			if r.numArgs >= 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
-				result = reflekt.parse r.handler
-				args = { "#{result[0]}": msg }
-				for option, i in options[1...]
-					args[result[i + 1]] = option
-				console.log args
-				reflekt.call r.handler, args
-			else if r.numArgs < 0
-				r.handler msg, options[1...]
-			else
-				console.log 'Wrong usage of ' + cmd
-				telegram.sendMessage msg.chat.id, "Wrong usage. Consult the /help command for help."
-			handled = yes
-			break
+	korubaku (ko) =>
+		console.log "Handling message " + msg.message_id
+		options = parser.parse msg.text
+		cmd = if options[0].startsWith '/' then options[0][1...] else ''
+		console.log 'Command: ' + cmd
+		handled = no
+		for r in routes
+			if isCommand cmd, r.command
+				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
+				if r.numArgs >= 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
+					result = reflekt.parse r.handler
+					args = { "#{result[0]}": msg }
+					for option, i in options[1...]
+						args[result[i + 1]] = option
+					console.log args
+					reflekt.call r.handler, args
+				else if r.numArgs < 0
+					r.handler msg, options[1...]
+				else
+					console.log 'Wrong usage of ' + cmd
+					telegram.sendMessage msg.chat.id, "Wrong usage. Consult the /help command for help."
+				handled = yes
+				break
 
-	# If the current input has not been handled
-	# Try to distribute it to the input grabber or default processor
-	if !handled
-		korubaku (ko) =>
+		# If the current input has not been handled
+		# Try to distribute it to the input grabber or default processor
+		if !handled
 			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
 			if m? and m != ''
-				telegram.sendChatAction msg.chat.id, 'typing'
+				telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Input is grabbed by #{m}"
 				cmd = yield store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", ko.default()
 				console.log "Input is grabbed to #{cmd}"
@@ -83,7 +83,7 @@ handleMessage = (msg) ->
 					!msg.chat.title? or
 					msg.reply_to_message.from.username is config.name)
 
-				telegram.sendChatAction msg.chat.id, 'typing'
+				telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Default processor: #{config.default}"
 				(require config.default).default msg, telegram, store, exports, config
 			else
