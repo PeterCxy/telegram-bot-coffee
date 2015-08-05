@@ -69,7 +69,7 @@ handleMessage = (msg) ->
 		if !handled
 			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
 			if m? and m != ''
-				telegram.sendChatAction msg.chat.id, 'typing', ko.default()
+				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Input is grabbed by #{m}"
 				cmd = yield store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", ko.default()
 				console.log "Input is grabbed to #{cmd}"
@@ -83,7 +83,7 @@ handleMessage = (msg) ->
 					!msg.chat.title? or
 					msg.reply_to_message.from.username is config.name)
 
-				telegram.sendChatAction msg.chat.id, 'typing', ko.default()
+				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Default processor: #{config.default}"
 				(require config.default).default msg, telegram, store, exports, config
 			else
