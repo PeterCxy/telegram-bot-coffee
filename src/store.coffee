@@ -11,7 +11,7 @@ cache = new Memcached config.memcached,
 lifetime = 5 * 60 * 60
 
 key = (type, id) ->
-	type + ':' + id
+	"#{config.name}:#{type}:#{id}"
 
 exports.put = (type, id, value, callback) ->
 	cache.set (key type, id), value, lifetime, callback
