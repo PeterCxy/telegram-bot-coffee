@@ -26,7 +26,8 @@ The configuration file should be in `json` format:
 	"modules": [
 		"module1",
 		"module2"
-	]
+	],
+	"default": "module3"
 }
 ```
 
@@ -56,6 +57,8 @@ corresponds to the config with `urlbase` = `https://yoursite.yourdomain/some/pat
 
 `modules`: Modules you want to load with this bot.
 
+`default`: If no module could be found to process the Telegram message, pass it to the module defined in `default`
+
 Modules
 ===
 
@@ -79,8 +82,25 @@ The main file should contain:
 * `exports.name`: The name of the module. May not be the same as the npm package name. Must be unique.
 * `exports.desc`: The description of the module. May not be the same as the npm package description.
 * `exports.setup`: The function called on start.
+* `exports.default`: The function that will be called if the module is set in the `default` config
 
-On start, the `setup` function will be called, and two arguments will be passed, `telegram` and `store`. `telegram` is the Telegram Bot API object, the `store` is the `memcached` object. See the source code of this bot for details.
+On start, the `setup` function will be called.
+
+```coffeescript
+exports.setup = (telegram, store, server, config) ->
+	# telegram: the Telegram API object (telegram.coffee)
+	# store: the memcached object (store.coffee)
+	# server: the robot server object
+	# config: the config object
+```
+
+Or, if the module is set in the `default` config, it will receive unprocessed messages in this function:
+
+```coffeescript
+exports.default = (msg, telegram, store, server, config) ->
+	# msg: the Message object
+	# the others are the same as in the setup function
+```
 
 The `setup` function should return an array of `command` objects, e.g. (CoffeeScript object format)
 
@@ -117,6 +137,9 @@ The description may not be explicit enough, see example module projects:
 
 [telegram-bot-examples](https://github.com/PeterCxy/telegram-bot-examples)  
 [telegram-bot-pictures](https://github.com/PeterCxy/telegram-bot-pictures)
+
+Or you can play with my Telegram robot @PeterCxyBot for some fun!
+
 
 License
 ===
