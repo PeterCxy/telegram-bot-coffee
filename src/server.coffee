@@ -15,6 +15,7 @@ exports.route = route = (info) ->
 			command: i.cmd
 			numArgs: i.num
 			optArgs: if i.opt then i.opt else 0
+			typing: if i.typing then i.typing else no
 			handler: i.act
 		routes.push r
 
@@ -48,7 +49,7 @@ handleMessage = (msg) ->
 		handled = no
 		for r in routes
 			if isCommand cmd, r.command
-				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
+				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default() if r.typing
 				if r.numArgs >= 0 and r.numArgs >= options.length - 1 >= r.numArgs - r.optArgs
 					result = reflekt.parse r.handler
 					args = { "#{result[0]}": msg }
@@ -69,7 +70,6 @@ handleMessage = (msg) ->
 		if !handled
 			m = yield store.get 'grab', "#{msg.chat.id}module#{msg.from.id}", ko.default()
 			if m? and m != ''
-				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Input is grabbed by #{m}"
 				cmd = yield store.get 'grab', "#{msg.chat.id}cmd#{msg.from.id}", ko.default()
 				console.log "Input is grabbed to #{cmd}"
@@ -83,7 +83,6 @@ handleMessage = (msg) ->
 					!msg.chat.title? or
 					msg.reply_to_message.from.username is config.name)
 
-				yield telegram.sendChatAction msg.chat.id, 'typing', ko.default()
 				console.log "Default processor: #{config.default}"
 				(require config.default).default msg, telegram, store, exports, config
 			else
