@@ -80,7 +80,7 @@ handleMessage = (msg) ->
 				(require m).input cmd, msg, telegram, store, exports, config if cmd? and cmd != ''
 			else if config.default? and
 					(msg.text.startsWith("@#{config.name}") or
-					!msg.chat.title? or
+					!msg.chat.title? or config.default_no_prefix or
 					msg.reply_to_message.from.username is config.name)
 
 				console.log "Default processor: #{config.default}"
