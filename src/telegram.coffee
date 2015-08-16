@@ -12,7 +12,7 @@ class Telegram
 			catch err
 				null
 
-			if result.ok
+			if result? and result.ok
 				callback null, result
 			else
 				error = new Error 'result is not okay'
