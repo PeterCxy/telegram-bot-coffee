@@ -1,4 +1,7 @@
 exports.parse = (cmd) ->
+	if !cmd?
+		return []
+
 	options = []
 	arr = cmd.split(" ")
 	opt = ""

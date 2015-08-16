@@ -82,7 +82,13 @@ eventLoop = ->
 		if !error? and updates?
 			for update in updates
 				console.log update.message
-				serv.handleMessage update.message
+				if !update.message.text?
+					update.message.text = ''
+
+				try
+					serv.handleMessage update.message
+				catch err
+					console.log err
 
 		setTimeout ->
 			eventLoop()
