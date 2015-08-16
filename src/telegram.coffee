@@ -44,6 +44,13 @@ class Telegram
 		@post 'setWebHook', opts, (error, result) =>
 			callback error
 	
+	getUpdates: (offset, callback) ->
+		opts =
+			offset: offset
+		@post 'getUpdates', opts, (error, result) =>
+			res = result.result if result? and result.ok
+			callback error, res
+	
 	sendChatAction: (chat, action, callback) ->
 		opts =
 			chat_id: chat

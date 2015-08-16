@@ -40,7 +40,7 @@ isCommand = (arg, cmd) ->
 	else
 		arg == cmd
 
-handleMessage = (msg) ->
+exports.handleMessage = handleMessage = (msg) ->
 	korubaku (ko) =>
 		console.log "Handling message " + msg.message_id
 		options = parser.parse msg.text
