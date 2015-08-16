@@ -82,6 +82,10 @@ eventLoop = ->
 		if !error? and updates?
 			for update in updates
 				console.log update.message
+
+				if !update.from?
+					continue
+
 				if !update.message.text?
 					update.message.text = ''
 
