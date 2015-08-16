@@ -28,7 +28,7 @@ exports.info = [
 		debug: yes
 		act: (msg) =>
 			opt = ''
-			(opt += "#{h.cmd} - #{h.args} #{h.des}\n" if !h.debug) for h in help
+			(opt += "#{h.cmd} - #{h.args} #{h.des.split('\n')[0]}\n" if !h.debug) for h in help
 			telegram.sendMessage msg.chat.id, opt
 	,
 		cmd: 'module'
