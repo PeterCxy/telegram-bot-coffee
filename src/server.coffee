@@ -81,7 +81,7 @@ exports.handleMessage = handleMessage = (msg) ->
 			else if config.default? and
 					(msg.text.startsWith("@#{config.name}") or
 					!msg.chat.title? or config.default_no_prefix or
-					msg.reply_to_message.from.username is config.name)
+					(msg.reply_to_message? and msg.reply_to_message.from.username is config.name))
 
 				console.log "Default processor: #{config.default}"
 				(require config.default).default msg, telegram, store, exports, config

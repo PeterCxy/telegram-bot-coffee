@@ -83,7 +83,7 @@ eventLoop = ->
 			for update in updates
 				console.log update.message
 
-				if !update.from?
+				if !update.message.from?
 					continue
 
 				if !update.message.text?
