@@ -70,6 +70,10 @@ exports.launch = ->
 eventLoop = ->
 	korubaku (ko) =>
 		offset = yield store.get 'poll', 'offset', ko.default()
+
+		if !offset?
+			offset = 0
+
 		console.log "offset is #{offset}"
 		[error, updates] = yield telegram.getUpdates offset + 1, ko.raw()
 		if error? or !updates? or updates.length is 0
