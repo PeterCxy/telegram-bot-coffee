@@ -12,7 +12,8 @@ exports.parse = (cmd) ->
 		if str.startsWith '"'
 			concat = yes
 			str = str[1..]
-		else if str.endsWith '"'
+
+		if str.endsWith '"'
 			concat = no
 			options.push opt + str[0..-2]
 			opt = ""

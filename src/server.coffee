@@ -96,7 +96,7 @@ exports.handleRequest = (req, res, next) ->
 	res.end()
 	next()
 
-# The cancel command
+# The cancel command and parser debugger
 exports.info = [
 		cmd: 'cancel'
 		num: 0
@@ -110,4 +110,11 @@ exports.info = [
 				mod.cancel msg, telegram, store, exports, config if mod.cancel?
 			telegram.sendMessage msg.chat.id, 'Current session interrupted.', null,
 				telegram.makeHideKeyboard()
+	,
+		cmd: 'parse'
+		num: -1
+		desc: "Parser debugger"
+		debug: yes
+		act: (msg, args) ->
+			telegram.sendMessage msg.chat.id, args.join '\n'
 ]
