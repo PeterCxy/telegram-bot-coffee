@@ -6,17 +6,21 @@ exports.parse = (cmd) ->
 	arr = cmd.split(" ")
 	opt = ""
 	concat = no
+	endTag = ''
 	for str, i in arr
 		continue if str == ""
 
-		if str.startsWith '"'
-			concat = yes
-			str = str[1..]
+		if !concat
+			[result, endTag] = hasStartQuotes str
+			if result
+				concat = yes
+				str = str[1..]
 
-		if str.endsWith '"'
+		if concat and (endTag isnt '') and str.endsWith endTag
 			concat = no
 			options.push opt + str[0..-2]
 			opt = ""
+			endTag = ''
 			continue
 
 		if !concat
@@ -29,6 +33,17 @@ exports.parse = (cmd) ->
 		options.push str
 
 	options
+
+startTags = [ '"', "'" ]
+endTags = [ '"', "'" ]
+
+hasStartQuotes = (str) ->
+	endTag = ''
+	for tag, i in startTags
+		if str.startsWith tag
+			endTag = endTags[i]
+			break
+	[ endTag isnt '', endTag ]
 
 exports.parseConfig = ->
 	if process.argv.length >= 3
