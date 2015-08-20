@@ -23,6 +23,11 @@ exports.parse = (cmd) ->
 			options.push str
 		else
 			opt += str + " "
+
+	# If concat is still true, just push the current string
+	if concat
+		options.push str
+
 	options
 
 exports.parseConfig = ->
@@ -41,4 +46,3 @@ exports.parseConfig = ->
 
 	else
 		no
-		
