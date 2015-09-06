@@ -67,7 +67,7 @@ class Telegram
 		opts['reply_markup'] = keyboard if keyboard
 		console.log opts
 		@post 'sendMessage', opts, (error, result) =>
-			console.log "Message sent to #{chat}" if result.ok
+			console.log "Message sent to #{chat}" if result? and result.ok
 	
 	makeKeyboard: (keyboard, resize, selective) ->
 		JSON.stringify
