@@ -100,4 +100,4 @@ eventLoop = ->
 
 		setTimeout ->
 			eventLoop()
-		, 1000
+		, 100

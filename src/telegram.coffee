@@ -47,6 +47,7 @@ class Telegram
 	getUpdates: (offset, callback) ->
 		opts =
 			offset: offset
+			timeout: 15 # For a long polling
 		@post 'getUpdates', opts, (error, result) =>
 			res = result.result if result? and result.ok
 			callback error, res
