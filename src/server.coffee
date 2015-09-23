@@ -44,7 +44,7 @@ exports.handleMessage = handleMessage = (msg) ->
 	korubaku (ko) =>
 		console.log "Handling message " + msg.message_id
 		options = parser.parse msg.text
-		cmd = if options[0].startsWith '/' then options[0][1...] else ''
+		cmd = if options.length > 0 and options[0].startsWith '/' then options[0][1...] else ''
 		console.log 'Command: ' + cmd
 		handled = no
 		for r in routes

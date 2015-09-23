@@ -70,6 +70,19 @@ class Telegram
 		@post 'sendMessage', opts, (error, result) =>
 			console.log "Message sent to #{chat}" if result? and result.ok
 	
+	getFile: (id, callback) ->
+		opts =
+			file_id: id
+
+		@post 'getFile', opts, (error, result) =>
+			if !error? and result? and result.ok
+				callback null, result.result
+			else
+				callback error, null
+
+	getFileUrl: (path) ->
+		"https://api.telegram.org/file/bot#{@auth}/#{path}"
+
 	makeKeyboard: (keyboard, resize, selective) ->
 		JSON.stringify
 			keyboard: keyboard
