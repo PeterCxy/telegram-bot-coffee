@@ -102,7 +102,7 @@ class Telegram
 			selective: if selective? then selective else no
 
 uploadStub = (method, name) ->
-	(chat, stream, reply_to) ->
+	(chat, stream, reply_to, callback) ->
 		# TODO: Should support file_id
 		opts =
 			chat_id: chat
@@ -110,6 +110,8 @@ uploadStub = (method, name) ->
 		opts['reply_to_message_id'] = reply_to if reply_to
 		@postUpload method, opts, (error, result) =>
 			console.log "#{method} succeeded" if result.ok
+
+			callback error, result
 
 uploadMethods = [
 		method: "sendPhoto"
