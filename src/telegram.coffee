@@ -111,7 +111,7 @@ uploadStub = (method, name) ->
 		@postUpload method, opts, (error, result) =>
 			console.log "#{method} succeeded" if result.ok
 
-			callback error, result
+			callback error, result if callback?
 
 uploadMethods = [
 		method: "sendPhoto"
